@@ -2,12 +2,35 @@ import React from 'react';
 import styled from 'styled-components';
 import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
+import _ from 'lodash';
+import Moment from 'moment';
 
 const CommentContainer = styled.div`
   border-radius: 3px;
   padding: 0.25em 0.25em 0.25em 3em; 
   border: 1px solid grey;
   position:relative;
+`;
+const Username = styled.h5`
+  color: #00897B;
+  margin: 0;
+  font-family: sans-serif;
+`;
+const CommentText = styled.h4`
+  margin: 10px 0;
+  font-family: sans-serif;
+  font-weight: 100;
+`;
+const CommentHeader  = styled.div`
+  display: flex;
+  margin-top: 8px;
+`;
+
+const Timestamp = styled.h5`
+  color: #9e9e9e;
+  margin: 0;
+  margin-left: 8px;
+  font-family: sans-serif;
 `;
 
 const IndentedComment = styled.div`
@@ -70,8 +93,16 @@ class SubComment extends React.Component {
   constructor(props){
     super(props);
   }
+  findUsername(){
+    let user = _.find(this.props.users, user => user.id === this.props.data.user);
+    return user.username;
+  }
+  calcTimestamp(){
+    return Moment(this.props.data.createdAt).fromNow();
+  }
 
   render() {
+    console.log(this.props.users)
     return (
       <div>
         <CommentContainer>
@@ -81,12 +112,21 @@ class SubComment extends React.Component {
             onDownvote={this.props.onDownvote}
             onUpvote={this.props.onUpvote}
           ></VoteButtons>
-          <h4>{this.props.data.text}</h4>
+          <CommentHeader>
+            <Username>{this.findUsername()}</Username>
+            <Timestamp>{this.calcTimestamp()}</Timestamp>
+          </CommentHeader>
+          <CommentText>{this.props.data.text}</CommentText>
         </CommentContainer>
         <IndentedComment>
           {this.props.data.comments.map(nextComment => {
             if(nextComment){
-              return <SubComment data={nextComment} key={nextComment.id} onUpvote={this.props.onUpvote} onDownvote={this.props.onDownvote}/>
+              return <SubComment
+              users={this.props.users}
+              data={nextComment}
+              key={nextComment.id}
+              onUpvote={this.props.onUpvote}
+              onDownvote={this.props.onDownvote}/>
             }
           })}
         </IndentedComment>
@@ -101,20 +141,15 @@ class RootComment extends React.Component {
   }
 
   render() {
-    const data = this.props.data;
-    let lastCategory = null;
-
-    const rows = this.props.data.map(comment => {
-      return  (
-        <div style={{marginBottom: '20px'}} key={comment.id}>
-          <SubComment data={comment} onUpvote={this.props.onUpvote} onDownvote={this.props.onDownvote}/>
-        </div>
-      )
-    });
-    console.log(this.props)
     return (
       <div>
-        {rows}
+        {this.props.data.map(comment => {
+          return (
+            <div style={{ marginBottom: '20px' }} key={comment.id}>
+              <SubComment data={comment} users={this.props.users} onUpvote={this.props.onUpvote} onDownvote={this.props.onDownvote} />
+            </div>
+          )
+        })}
       </div>
     );
   }

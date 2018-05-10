@@ -1,29 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import HelloWorld from '../components/HelloWorld.jsx'
-
-const PRODUCTS = [
-  {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
-  {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
-  {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
-  {category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
-  {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
-  {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
-];
+import RedditComment from '../components/RedditComment.jsx'
 
 const DATA = [
   {
     id: 123,
-    points: 20,
+    points: 50,
     createdAt: "2018-03-28T20:15:00.000-04:00",
-    text: "Comment #1",
+    text: "I am a reddit user! This is my first comment",
     user: 1,
-    comments: [
-      {
+    comments: [{
         id: 43,
         points: 30,
         createdAt: "2018-03-28T20:16:00.000-04:00",
-        text: "Comment 1 Nest 1",
+        text: "This guy is really dumb. he has commented many tims before",
         user: 2,
         comments: [
           {
@@ -54,9 +44,7 @@ const DATA = [
     createdAt: "2018-03-28T20:12:00.000-04:00",
     text: "Comment #2",
     user: 2,
-    comments: [
-      // ...
-    ],
+    comments: [],
   },
 ];
 
@@ -71,17 +59,34 @@ const USERS = [
   },
 ];
 
+const findCommentById = function(id, data){
+  let found = false;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].id === id) {
+      return data[i];
+    } else {
+      found = findCommentById(id, data[i].comments);
+      if (found) {
+        return found;
+      }
+    }
+  }
+}
+
 const onUpvote = function(id){
-  console.log(id);
+  let comment = findCommentById(id, DATA);
+  comment.points++;
+  console.log(DATA)
 }
 
 const onDownvote = function(id){
-  console.log(id);
+  let comment = findCommentById(id, DATA);
+  comment.points--;
+  console.log(DATA)
 }
 
 ReactDOM.render(
-	<HelloWorld
-		products={PRODUCTS}
+	<RedditComment
 		users={USERS}
 		data={DATA}
 		onUpvote={onUpvote}
