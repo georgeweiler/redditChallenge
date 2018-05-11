@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
@@ -214,6 +215,11 @@ class RootComment extends React.Component {
     );
   }
 }
+
+RootComment.propTypes = {
+  data: PropTypes.array,
+  users: PropTypes.array,
+};
 
 export default RootComment;
 
