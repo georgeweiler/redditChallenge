@@ -5,6 +5,7 @@
   "repository": "https://github.com/georgeweiler/redditChallenge.git",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
